@@ -12,8 +12,19 @@ A lightweight hook system for FrontAccounting module extensions, providing WordP
 
 ## Installation
 
+Since this is a GitHub repository (not available on Packagist), you need to download it manually:
+
 ```bash
-composer require ksfraser/fa-hooks
+# Clone the repository
+git clone https://github.com/yourusername/fa-hooks.git
+
+# Or download the ZIP and extract
+```
+
+Then include the library in your project:
+
+```php
+require_once '/path/to/fa-hooks/src/HookManager.php';
 ```
 
 ## Usage
