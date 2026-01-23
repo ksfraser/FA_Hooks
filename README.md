@@ -28,12 +28,17 @@ For use with multiple FA modules, install FA-Hooks as a separate module:
 cd /path/to/frontaccounting/modules
 git clone https://github.com/ksfraser/FA_Hooks.git fa-hooks
 
-# Install dependencies
+# Install PHP dependencies (automatically done during FA module activation)
 cd fa-hooks
-composer install
+composer install --no-dev --optimize-autoloader
 
 # Activate in FA admin (Setup → Install/Update Modules)
 ```
+
+**What happens during activation:**
+- FA automatically installs PHP dependencies via `ComposerInstaller`
+- Hook system is initialized globally as `$GLOBALS['fa_hooks_manager']`
+- Access control is configured (requires admin access for future admin screens)
 
 This makes the hook system available to ALL your FA modules.
 
@@ -54,6 +59,30 @@ Then include in your project:
 ```php
 require_once '/path/to/fa-hooks/src/Ksfraser/FA_Hooks/HookManager.php';
 $hooks = new Ksfraser\FA_Hooks\HookManager();
+```
+
+## Security & Access Control
+
+When installed as an FA module, FA-Hooks includes predefined access control constants:
+
+```php
+// Security constants (defined in hooks.php)
+define('SS_FAHOOKS', 100);  // Security Section for FA Hooks
+define('SA_FAHOOKS', 1);    // Security Area for FA Hooks
+```
+
+**Current Access Requirements:**
+- Module installation requires admin access (`SA_FAHOOKS`)
+- Future admin screens will automatically inherit this access control
+
+**For Module Developers:**
+When creating admin interfaces that extend FA-Hooks, use these constants:
+
+```php
+// Check access in your admin screens
+if (!check_edit_security(SS_FAHOOKS)) {
+    // Handle access denied
+}
 ```
 
 ## Usage

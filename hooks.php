@@ -3,12 +3,38 @@
 // FrontAccounting hooks file for the FA-Hooks module.
 // When installed under FA as modules/fa-hooks, this registers the module.
 
+// Define security constants for access control (future use)
+define('SS_FAHOOKS', 113 << 8);  // Security Section for FA Hooks
+define('SA_FAHOOKS', 114 << 8);    // Security Area for FA Hooks
+
 class hooks_fa_hooks extends hooks
 {
     var $module_name = 'FA Hooks';
 
+    // Access level for admin screens (future use)
+    const ACCESS_LEVEL = SA_FAHOOKS;
+
     function install()
     {
+        global $path_to_root;
+
+        // Install composer dependencies using dedicated installer class
+        $module_path = $path_to_root . '/modules/fa-hooks';
+
+        // Include the ComposerInstaller class
+        $installer_path = $module_path . '/src/Ksfraser/FA_Hooks/Install/ComposerInstaller.php';
+        if (file_exists($installer_path)) {
+            require_once $installer_path;
+            $installer = new Ksfraser\FA_Hooks\Install\ComposerInstaller($module_path);
+            $result = $installer->install();
+
+            if (!$result['success']) {
+                // Log the error but don't fail installation
+                error_log('FA-Hooks: Composer installation failed: ' . $result['message']);
+                // Continue with installation - hook system can still work without composer
+            }
+        }
+
         // FA-Hooks is a library module - no database setup needed
         // It provides the hook system for other modules to use
         return true;
@@ -18,6 +44,9 @@ class hooks_fa_hooks extends hooks
     {
         // No special access requirements - this is a library module
         return true;
+        //FUTURE: Require admin access for potential future admin screens
+        //return self::ACCESS_LEVEL;
+
     }
 
     function activate()

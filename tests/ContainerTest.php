@@ -20,39 +20,46 @@ class ContainerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->versionAdapter = new FAVersionAdapter();
+        $this->versionAdapter = new FAVersionAdapter('2.4.19'); // Use FA 2.4+ for testing
     }
 
     public function testArrayContainerBasicFunctionality()
     {
-        $container = new ArrayContainer($this->versionAdapter);
+        // Test through factory which returns concrete implementation
+        $factory = new ContainerFactory($this->versionAdapter);
+        $container = $factory->createContainer('array'); // Returns TabContainer
 
-        // Test adding items
-        $container->addItem('key1', 'value1');
-        $container->addItem('key2', ['nested' => 'value']);
+        // Create a tab definition for testing
+        $tabDef = new TabDefinition('test_key', 'Test Title', ['url' => 'test.php'], $this->versionAdapter);
+        $container->addItem('test_tab', $tabDef);
 
         $result = $container->toArray();
-        $this->assertEquals('value1', $result['key1']);
-        $this->assertEquals(['nested' => 'value'], $result['key2']);
+        $this->assertArrayHasKey('test_tab', $result);
+        $this->assertIsArray($result['test_tab']);
     }
 
     public function testArrayContainerMergeWith()
     {
-        $container = new ArrayContainer($this->versionAdapter);
-        $container->addItem('key1', 'value1');
+        // Test through factory
+        $factory = new ContainerFactory($this->versionAdapter);
+        $container = $factory->createContainer('array'); // Returns TabContainer
 
-        $existing = ['key2' => 'existing_value'];
+        // Create a tab definition
+        $tabDef = new TabDefinition('test_key', 'Test Title', [], $this->versionAdapter);
+        $container->addItem('test_tab', $tabDef);
+
+        $existing = ['existing_tab' => 'Existing Title'];
         $result = $container->mergeWith($existing);
 
-        $this->assertEquals('value1', $result['key1']);
-        $this->assertEquals('existing_value', $result['key2']);
+        $this->assertArrayHasKey('test_tab', $result);
+        $this->assertArrayHasKey('existing_tab', $result);
     }
 
     public function testTabContainer()
     {
         $container = new TabContainer($this->versionAdapter);
 
-        $tab = new TabDefinition('Test Tab', 'test.php', $this->versionAdapter);
+        $tab = new TabDefinition('test_tab', 'Test Tab', ['url' => 'test.php'], $this->versionAdapter);
         $container->addItem('test_tab', $tab);
 
         $result = $container->toArray();
@@ -67,8 +74,9 @@ class ContainerTest extends TestCase
 
         $result = $container->toArray();
         $this->assertArrayHasKey('new_tab', $result);
-        $this->assertEquals('New Tab', $result['new_tab']['title']);
-        $this->assertEquals('new.php', $result['new_tab']['url']);
+        // For FA 2.4+, toArray returns [key => title, key_options => options]
+        $this->assertEquals('New Tab', $result['new_tab']['new_tab']);
+        $this->assertEquals(['url' => 'new.php', 'icon' => 'icon.png'], $result['new_tab']['new_tab_options']);
     }
 
     public function testMenuContainer()

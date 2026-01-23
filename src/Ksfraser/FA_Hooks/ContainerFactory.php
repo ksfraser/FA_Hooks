@@ -39,11 +39,11 @@ class ContainerFactory
     /**
      * Create a generic array container
      *
-     * @return ArrayContainer
+     * @return TabContainer Returns TabContainer as default concrete implementation
      */
-    public function createArrayContainer(): ArrayContainer
+    public function createArrayContainer(): TabContainer
     {
-        return new ArrayContainer($this->versionAdapter);
+        return new TabContainer($this->versionAdapter);
     }
 
     /**
@@ -53,7 +53,7 @@ class ContainerFactory
      * @return ArrayContainer
      * @throws \InvalidArgumentException
      */
-    public function createContainer(string $type): ArrayContainer
+    public function createContainer(string $type)
     {
         switch ($type) {
             case 'tab':

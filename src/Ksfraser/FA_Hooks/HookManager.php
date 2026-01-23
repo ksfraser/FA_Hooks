@@ -104,6 +104,7 @@ class HookManager
         }
 
         $value = isset($args[0]) ? $args[0] : null;
+        $originalValue = $value;
 
         foreach ($this->hooks[$hook_name] as $hook) {
             $callback = $hook['callback'];
@@ -119,6 +120,8 @@ class HookManager
                 }
             } catch (\Exception $e) {
                 error_log("HookManager: Error executing hook '$hook_name': " . $e->getMessage());
+                // On exception, subsequent callbacks get the original unmodified value
+                $args[0] = $originalValue;
             }
         }
 
@@ -298,5 +301,16 @@ class HookManager
     public function executeHookPoint(string $hookName, ...$args)
     {
         return $this->hookRegistry->executeHook($hookName, ...$args);
+    }
+
+    /**
+     * Clear all registered hooks (for testing)
+     *
+     * @return void
+     */
+    public function clear(): void
+    {
+        $this->hooks = [];
+        $this->hookData = [];
     }
 }

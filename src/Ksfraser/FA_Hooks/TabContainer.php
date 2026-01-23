@@ -38,6 +38,7 @@ class TabContainer extends ArrayContainer
      */
     public function createTab(string $key, string $title, string $url, array $options = []): self
     {
+        $options['url'] = $url; // Add url to options
         $tab = new TabDefinition($key, $title, $options, $this->versionAdapter);
 
         return $this->addItem($key, $tab);

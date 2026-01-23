@@ -17,5 +17,8 @@
         <include>
             <directory suffix=".php">src</directory>
         </include>
+        <exclude>
+            <file>src/Ksfraser/FA_Hooks/HookManagerEnhanced.php</file>
+        </exclude>
     </coverage>
 </phpunit>

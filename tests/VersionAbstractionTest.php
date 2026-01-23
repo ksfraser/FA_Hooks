@@ -1,6 +1,6 @@
 <?php
 
-namespace Ksfraser\FA_Hooks\Test;
+namespace Ksfraser\FA_Hooks\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Ksfraser\FA_Hooks\FAVersionAdapter;

@@ -99,4 +99,54 @@ class TabManager
     {
         return $this->versionAdapter->getVersion();
     }
+
+    /**
+     * Add a tab to an existing tabs array
+     *
+     * @param array $tabs Existing tabs array
+     * @param string $key Tab key
+     * @param string $title Tab title
+     * @return array Updated tabs array
+     */
+    public function addTab(array $tabs, string $key, string $title): array
+    {
+        $tabs[$key] = $title;
+        return $tabs;
+    }
+
+    /**
+     * Remove a tab from an existing tabs array
+     *
+     * @param array $tabs Existing tabs array
+     * @param string $key Tab key to remove
+     * @return array Updated tabs array
+     */
+    public function removeTab(array $tabs, string $key): array
+    {
+        unset($tabs[$key]);
+        return $tabs;
+    }
+
+    /**
+     * Get all tab keys from a tabs array
+     *
+     * @param array $tabs Tabs array
+     * @return array Array of tab keys
+     */
+    public function getTabKeys(array $tabs): array
+    {
+        return array_keys($tabs);
+    }
+
+    /**
+     * Check if a tab exists in a tabs array
+     *
+     * @param array $tabs Tabs array
+     * @param string $key Tab key to check
+     * @return bool True if tab exists
+     */
+    public function hasTab(array $tabs, string $key): bool
+    {
+        return isset($tabs[$key]);
+    }
 }
