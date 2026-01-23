@@ -299,3 +299,4 @@ class HookManager
     {
         return $this->hookRegistry->executeHook($hookName, ...$args);
     }
+}

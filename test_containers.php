@@ -8,27 +8,27 @@ echo "Testing Container Classes...\n\n";
 try {
     $versionAdapter = new Ksfraser\FA_Hooks\FAVersionAdapter();
 
-    // Test ArrayContainer
-    echo "1. Testing ArrayContainer...\n";
-    $arrayContainer = new Ksfraser\FA_Hooks\ArrayContainer($versionAdapter);
-    $arrayContainer->addItem('key1', 'value1');
-    $arrayContainer->addItem('key2', ['nested' => 'value']);
-    $result = $arrayContainer->toArray();
-    assert($result['key1'] === 'value1', 'ArrayContainer basic functionality failed');
-    assert($result['key2']['nested'] === 'value', 'ArrayContainer nested array failed');
+    // Test ArrayContainer (using TabContainer as concrete implementation)
+    echo "1. Testing ArrayContainer (via TabContainer)...\n";
+    $tabContainer = new Ksfraser\FA_Hooks\TabContainer($versionAdapter);
+    $tab = new Ksfraser\FA_Hooks\TabDefinition('test_tab', 'Test Tab', [], $versionAdapter);
+    $tabContainer->addItem('test_tab', $tab);
+    $result = $tabContainer->toArray();
+    assert(isset($result['test_tab']), 'TabContainer basic functionality failed');
+    assert($result['test_tab']['title'] === 'Test Tab', 'TabContainer title failed');
     echo "   ✓ ArrayContainer basic functionality works\n";
 
     // Test mergeWith
-    $existing = ['key3' => 'existing'];
-    $merged = $arrayContainer->mergeWith($existing);
-    assert($merged['key1'] === 'value1', 'mergeWith failed to preserve new items');
-    assert($merged['key3'] === 'existing', 'mergeWith failed to preserve existing items');
+    $existing = ['existing_tab' => ['title' => 'Existing', 'url' => 'existing.php']];
+    $merged = $tabContainer->mergeWith($existing);
+    assert(isset($merged['test_tab']), 'mergeWith failed to preserve new items');
+    assert($merged['existing_tab']['title'] === 'Existing', 'mergeWith failed to preserve existing items');
     echo "   ✓ ArrayContainer mergeWith works\n";
 
     // Test TabContainer
     echo "2. Testing TabContainer...\n";
     $tabContainer = new Ksfraser\FA_Hooks\TabContainer($versionAdapter);
-    $tab = new Ksfraser\FA_Hooks\TabDefinition('Test Tab', 'test.php', $versionAdapter);
+    $tab = new Ksfraser\FA_Hooks\TabDefinition('test_tab', 'Test Tab', [], $versionAdapter);
     $tabContainer->addItem('test_tab', $tab);
     $tabResult = $tabContainer->toArray();
     assert(isset($tabResult['test_tab']), 'TabContainer failed to add tab');
