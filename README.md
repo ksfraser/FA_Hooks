@@ -1,30 +1,59 @@
 # FA_Hooks
 
-A lightweight hook system for FrontAccounting module extensions, providing WordPress/SuiteCRM-style hooks for extending core FA functionality without modifying core files.
+A lightweight, extensible hook system for FrontAccounting module extensions, providing WordPress/SuiteCRM-style hooks for extending core FA functionality without modifying core files.
 
-## Features
+## Overview
+
+FA-Hooks is designed to be installed as a **separate FA module** that provides a generic hook system for ALL your other FA modules. This enables cross-module integration and extensibility.
+
+### Key Features
 
 - **Priority-based hook execution** - Control the order of hook callbacks
 - **Exception handling** - Continues execution even if individual hooks fail
 - **Hook data storage** - Store and retrieve data between hooks
 - **Multiple callback support** - Register multiple callbacks per hook
-- **Filter and action support** - Return values from filter hooks, void actions
+- **Dynamic hook registration** - Modules can register their own hook points
+- **Version abstraction** - Automatic handling of FA version differences
+- **Type-safe containers** - Object-oriented data management
+- **Cross-module integration** - Extensions can modify other modules' behavior
 
 ## Installation
 
-Since this is a GitHub repository (not available on Packagist), you need to download it manually:
+### As an FA Module (Recommended for Multi-Module Setups)
+
+For use with multiple FA modules, install FA-Hooks as a separate module:
+
+```bash
+# Install in FA modules directory
+cd /path/to/frontaccounting/modules
+git clone https://github.com/ksfraser/FA_Hooks.git fa-hooks
+
+# Install dependencies
+cd fa-hooks
+composer install
+
+# Activate in FA admin (Setup → Install/Update Modules)
+```
+
+This makes the hook system available to ALL your FA modules.
+
+### As a Library
+
+For single-module use or development:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/fa-hooks.git
+git clone https://github.com/ksfraser/FA_Hooks.git
 
-# Or download the ZIP and extract
+# Install dependencies
+composer install
 ```
 
-Then include the library in your project:
+Then include in your project:
 
 ```php
-require_once '/path/to/fa-hooks/src/HookManager.php';
+require_once '/path/to/fa-hooks/src/Ksfraser/FA_Hooks/HookManager.php';
+$hooks = new Ksfraser\FA_Hooks\HookManager();
 ```
 
 ## Usage
