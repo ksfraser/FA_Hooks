@@ -18,15 +18,21 @@ class hooks_0fa_hooks extends hooks
     {
         global $path_to_root;
 
-        // Note: Composer dependencies should be installed manually before module installation
-        // The composer install is disabled to avoid parse errors during FA module installation
+        // Install composer dependencies using dedicated installer class
         $module_path = $path_to_root . '/modules/0fa-hooks';
 
-        // Check if vendor directory exists (composer already run)
-        if (!is_dir($module_path . '/vendor')) {
-            // Log that composer needs to be run manually
-            error_log('0FA-Hooks: Please run "composer install" in the module directory before activating.');
-            // Continue without failing - hook system can work without composer for basic functionality
+        // Include the ComposerInstaller class
+        $installer_path = $module_path . '/src/Ksfraser/FA_Hooks/Install/ComposerInstaller.php';
+        if (file_exists($installer_path)) {
+            require_once $installer_path;
+            $installer = new Ksfraser\FA_Hooks\Install\ComposerInstaller($module_path);
+            $result = $installer->install();
+
+            if (!$result['success']) {
+                // Log the error but don't fail installation
+                error_log('FA-Hooks: Composer installation failed: ' . $result['message']);
+                // Continue with installation - hook system can still work without composer
+            }
         }
 
         // FA-Hooks is a library module - no database setup needed
@@ -48,7 +54,7 @@ class hooks_0fa_hooks extends hooks
         // Ensure the hook system is available globally
         global $path_to_root;
 
-        $hooks_path = $path_to_root . '/modules/fa-hooks/src/Ksfraser/FA_Hooks/HookManager.php';
+        $hooks_path = $path_to_root . '/modules/0fa-hooks/src/Ksfraser/FA_Hooks/HookManager.php';
         if (file_exists($hooks_path)) {
             // Initialize global hook manager if not already done
             if (!isset($GLOBALS['fa_hooks_manager'])) {
