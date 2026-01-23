@@ -1,15 +1,15 @@
 <?php
 
-// FrontAccounting hooks file for the FA-Hooks module.
-// When installed under FA as modules/fa-hooks, this registers the module.
+// FrontAccounting hooks file for the 0FA-Hooks module.
+// When installed under FA as modules/0fa-hooks, this registers the module.
 
 // Define security constants for access control (future use)
 define('SS_FAHOOKS', 113 << 8);  // Security Section for FA Hooks
 define('SA_FAHOOKS', 114 << 8);    // Security Area for FA Hooks
 
-class hooks_fa_hooks extends hooks
+class hooks_0fa_hooks extends hooks
 {
-    var $module_name = 'FA Hooks';
+    var $module_name = '0FA Hooks';
 
     // Access level for admin screens (future use)
     const ACCESS_LEVEL = SA_FAHOOKS;
@@ -19,7 +19,7 @@ class hooks_fa_hooks extends hooks
         global $path_to_root;
 
         // Install composer dependencies using dedicated installer class
-        $module_path = $path_to_root . '/modules/fa-hooks';
+        $module_path = $path_to_root . '/modules/0fa-hooks';
 
         // Include the ComposerInstaller class
         $installer_path = $module_path . '/src/Ksfraser/FA_Hooks/Install/ComposerInstaller.php';
